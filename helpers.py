@@ -8,11 +8,11 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Create tables if not exist
 Base.metadata.create_all(engine)
-#Session = sessionmaker(bind=engine)
+Session = sessionmaker(bind=engine)
 
 # ===== USER HELPERS =====
 def list_users():
-    session = SessionLocal()
+    session = Session()
     users = session.query(User).all()
     for u in users:
         print(f"ID: {u.id}, Name: {u.name}, Email: {u.email}")
@@ -21,7 +21,7 @@ def list_users():
 def handle_add_user():
     name = input("Enter user name: ")
     email = input("Enter user email: ")
-    session = SessionLocal()
+    session = Session()
     user = User(name=name, email=email)
     session.add(user)
     session.commit()
@@ -29,7 +29,7 @@ def handle_add_user():
     session.close()
 
 def handle_update_user():
-    session = SessionLocal()
+    session = Session()
     list_users()
     user_id = int(input("Enter user ID to update: "))
     name = input("New name (leave blank to skip): ").strip()
@@ -45,7 +45,7 @@ def handle_update_user():
     session.close()
 
 def handle_delete_user():
-    session = SessionLocal()
+    session = Session()
     list_users()
     user_id = int(input("Enter user ID to delete: "))
     user = session.query(User).filter_by(id=user_id).first()
@@ -63,7 +63,7 @@ def handle_delete_user():
 
 # ===== BOOK HELPERS =====
 def list_books():
-    session = SessionLocal()
+    session = Session()
     books = session.query(Book).all()
     for b in books:
         print(f"ID: {b.id}, Title: {b.title}, Author: {b.author}, Genre: {b.genre}, Copies: {b.copies}")
@@ -74,7 +74,7 @@ def handle_add_book():
     author = input("Enter author: ")
     genre = input("Enter genre: ")
     copies = int(input("Enter number of copies: "))
-    session = SessionLocal()
+    session = Session()
     book = Book(title=title, author=author, genre=genre, copies=copies)
     session.add(book)
     session.commit()
@@ -82,7 +82,7 @@ def handle_add_book():
     session.close()
 
 def handle_update_book():
-    session = SessionLocal()
+    session = Session()
     list_books()
     book_id = int(input("Enter book ID to update: "))
     title = input("New title (leave blank to skip): ").strip()
@@ -103,7 +103,7 @@ def handle_update_book():
     session.close()
 
 def handle_delete_book():
-    session = SessionLocal()
+    session = Session()
     list_books()
     book_id = int(input("Enter book ID to delete: "))
     book = session.query(Book).filter_by(id=book_id).first()
@@ -121,7 +121,7 @@ def handle_delete_book():
 
 # ===== BORROWED BOOK HELPERS =====
 def list_borrowed_books():
-    session = SessionLocal()
+    session = Session()
     borrowed = session.query(BorrowedBook).all()
     for b in borrowed:
         print(f"ID: {b.id}, User ID: {b.user_id}, Book ID: {b.book_id}, Borrow Date: {b.borrow_date}, Return Date: {b.return_date}")
@@ -134,7 +134,7 @@ def handle_borrow_book():
     book_id = int(input("Enter book ID to borrow: "))
     borrow_date_input = input("Enter borrow date (YYYY-MM-DD) [leave blank for today]: ").strip()
     borrow_date = datetime.today() if not borrow_date_input else datetime.strptime(borrow_date_input, "%Y-%m-%d")
-    session = SessionLocal()
+    session = Session()
     borrowed = BorrowedBook(user_id=user_id, book_id=book_id, borrow_date=borrow_date)
     session.add(borrowed)
     session.commit()
@@ -142,7 +142,7 @@ def handle_borrow_book():
     session.close()
 
 def handle_return_book():
-    session = SessionLocal()
+    session = Session()
     list_borrowed_books()
     borrow_id = int(input("Enter borrowed book ID to return: "))
     borrowed = session.query(BorrowedBook).filter_by(id=borrow_id).first()

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, text
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, Session
 
@@ -12,7 +12,7 @@ class User(Base):
     name = Column(String, nullable=False)
     email = Column(String, nullable=False, unique=True)
     
-    borrowed_books = relationship("BorrowedBook", back_populates="user")
+    borrowed_books = relationship("BorrowedBook", back_populates="user", cascade="all, delete-orphan")
 
     def __str__(self):
         return f"<User(id={self.id}, name='{self.name}', email='{self.email}')>"
@@ -29,6 +29,7 @@ class User(Base):
     def all(cls, session: Session):
         return session.query(cls).all()
     
+    @staticmethod
     def update_user(session, user_id, name=None, email=None):
         user = session.query(User).get(user_id)
         if user:
@@ -36,13 +37,16 @@ class User(Base):
             if email: user.email = email
             session.commit()
             print(f"User {user_id} updated!")
+        return user
 
+    @staticmethod
     def delete_user(session, user_id):
         user = session.query(User).get(user_id)
         if user:
             session.delete(user)
             session.commit()
             print(f"User {user_id} deleted!")
+        return user
 
 # Book model
 class Book(Base):
@@ -54,7 +58,7 @@ class Book(Base):
     genre = Column(String)
     copies = Column(Integer, default=1)
     
-    borrowed_books = relationship("BorrowedBook", back_populates="book")
+    borrowed_books = relationship("BorrowedBook", back_populates="book", cascade="all, delete-orphan")
 
     def __str__(self):
         return f"<Book(id={self.id}, title='{self.title}', author='{self.author}')>"
@@ -71,22 +75,26 @@ class Book(Base):
     def all(cls, session: Session):
         return session.query(cls).all()
     
+    @staticmethod
     def update_book(session, book_id, title=None, author=None, genre=None, copies=None):
         book = session.query(Book).get(book_id)
         if book:
             if title: book.title = title
             if author: book.author = author
             if genre: book.genre = genre
-            if copies: book.copies = copies
+            if copies is not None: book.copies = copies
             session.commit()
             print(f"Book {book_id} updated!")
+        return book
 
+    @staticmethod
     def delete_book(session, book_id):
         book = session.query(Book).get(book_id)
         if book:
             session.delete(book)
             session.commit()
             print(f"Book {book_id} deleted!")
+        return book
 
 # BorrowedBook model
 class BorrowedBook(Base):
@@ -116,16 +124,20 @@ class BorrowedBook(Base):
     def all(cls, session: Session):
         return session.query(cls).all()
     
+    @staticmethod
     def update_borrowed_book(session, borrowed_id, return_date=None):
         borrowed = session.query(BorrowedBook).get(borrowed_id)
         if borrowed:
             if return_date: borrowed.return_date = return_date
             session.commit()
             print(f"Borrowed book {borrowed_id} updated!")
+        return borrowed
 
+    @staticmethod
     def delete_borrowed_book(session, borrowed_id):
         borrowed = session.query(BorrowedBook).get(borrowed_id)
         if borrowed:
             session.delete(borrowed)
             session.commit()
             print(f"Borrowed book {borrowed_id} deleted!")
+        return borrowed

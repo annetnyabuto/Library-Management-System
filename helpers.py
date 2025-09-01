@@ -2,14 +2,13 @@ from sqlalchemy.orm import sessionmaker
 from datetime import datetime
 from models import Base, User, Book, BorrowedBook
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 
 engine = create_engine('sqlite:///library.db')
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Create tables if not exist
 Base.metadata.create_all(engine)
-Session = sessionmaker(bind=engine)
+#Session = sessionmaker(bind=engine)
 
 # ===== USER HELPERS =====
 def list_users():

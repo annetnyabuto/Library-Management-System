@@ -1,7 +1,11 @@
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
-from lib.db.models import Base, User, Book, BorrowedBook
-from lib.db import SessionLocal, engine
+from models import Base, User, Book, BorrowedBook
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+engine = create_engine('sqlite:///library.db')
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Create tables if not exist
 Base.metadata.create_all(engine)

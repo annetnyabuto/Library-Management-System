@@ -6,26 +6,29 @@ from datetime import datetime
 engine = create_engine('sqlite:///library.db')
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# Create tables
-Base.metadata.create_all(engine)
 
 def seed_data():
     session = SessionLocal()
+    user_data = (
+        ("Alice Johnson", "alice@email.com"),
+        ("Bob Smith", "bob@email.com"),
+        ("Carol Davis", "carol@email.com")
+    )
     
-    # Add sample users
-    users = [
-        User(name="Alice Johnson", email="alice@email.com"),
-        User(name="Bob Smith", email="bob@email.com"),
-        User(name="Carol Davis", email="carol@email.com")
-    ]
+    users = []
+    for name, email in user_data:
+        users.append(User(name=name, email=email))
     
-    # Add sample books
-    books = [
-        Book(title="To Kill a Mockingbird", author="Harper Lee", genre="Fiction", copies=3),
-        Book(title="1984", author="George Orwell", genre="Dystopian", copies=2),
-        Book(title="Pride and Prejudice", author="Jane Austen", genre="Romance", copies=2),
-        Book(title="The Great Gatsby", author="F. Scott Fitzgerald", genre="Fiction", copies=1)
-    ]
+    book_data = (
+        ("To Kill a Mockingbird", "Harper Lee", "Fiction", 3),
+        ("1984", "George Orwell", "Dystopian", 2),
+        ("Pride and Prejudice", "Jane Austen", "Romance", 2),
+        ("The Great Gatsby", "F. Scott Fitzgerald", "Fiction", 1)
+    )
+    
+    books = []
+    for title, author, genre, copies in book_data:
+        books.append(Book(title=title, author=author, genre=genre, copies=copies))
     
     session.add_all(users + books)
     session.commit()

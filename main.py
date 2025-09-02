@@ -8,18 +8,24 @@ from helpers import (
 
 def main_menu():
     print("Library Management System")
-    print("1. Add User")
-    print("2. View Users")
-    print("3. Update User")
-    print("4. Delete User")
-    print("5. Add Book")
-    print("6. View Books")
-    print("7. Update Book")
-    print("8. Delete Book")
-    print("9. Borrow Book")
-    print("10. Return Book")
-    print("11. View Borrowed Books")
-    print("12. Exit")
+    menu_options = (
+        ("1", "Add User"),
+        ("2", "View Users"),
+        ("3", "Update User"),
+        ("4", "Delete User"),
+        ("5", "Add Book"),
+        ("6", "View Books"),
+        ("7", "Update Book"),
+        ("8", "Delete Book"),
+        ("9", "Borrow Book"),
+        ("10", "Return Book"),
+        ("11", "View Borrowed Books"),
+        ("12", "Exit")
+    )
+    
+    for number, option in menu_options:
+        print(f"{number}. {option}")
+    
     choice = input("Choose an option: ")
     return choice
 

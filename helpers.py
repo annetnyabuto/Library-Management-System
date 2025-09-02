@@ -6,11 +6,9 @@ from sqlalchemy import create_engine
 engine = create_engine('sqlite:///library.db')
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# Create tables if not exist
-Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 
-# ===== USER HELPERS =====
+#USER HELPERS
 def list_users():
     session = Session()
     users = session.query(User).all()
@@ -21,8 +19,11 @@ def list_users():
 def handle_add_user():
     name = input("Enter user name: ")
     email = input("Enter user email: ")
+    
+    user_data = (name, email)
+    
     session = Session()
-    user = User(name=name, email=email)
+    user = User(name=user_data[0], email=user_data[1])
     session.add(user)
     session.commit()
     print(f"User created: {user.name}, ID: {user.id}")
@@ -61,7 +62,7 @@ def handle_delete_user():
         print(f"Deleted user {user.id}: {user.name}")
     session.close()
 
-# ===== BOOK HELPERS =====
+#BOOK HELPERS 
 def list_books():
     session = Session()
     books = session.query(Book).all()
@@ -119,7 +120,7 @@ def handle_delete_book():
         print(f"Deleted book {book.id}: {book.title}")
     session.close()
 
-# ===== BORROWED BOOK HELPERS =====
+#BORROWED BOOK HELPERS
 def list_borrowed_books():
     session = Session()
     borrowed = session.query(BorrowedBook).all()

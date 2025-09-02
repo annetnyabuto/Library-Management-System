@@ -1,5 +1,4 @@
 import sys
-from models import User, Book, BorrowedBook
 from helpers import (
     handle_add_user, list_users, handle_update_user, handle_delete_user,
     handle_add_book, list_books, handle_update_book, handle_delete_book,
